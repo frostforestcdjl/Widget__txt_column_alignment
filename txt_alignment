@@ -1,0 +1,41 @@
+Created on Tue Feb 11 17:48:18 2020
+
+@author: Chris
+"""
+
+import re
+
+file_in = 'data_in.txt'
+file_out = 'data_out.txt'
+
+unit_record = []
+line_temp = []
+pattern = '\S+'
+colume = int(input("How many columns in your data:"))
+space_number = int(input("The number of spaces between each column:"))
+
+with open(file_in) as f_obj:
+    lines = f_obj.readlines()
+    for line in lines:
+        txt = re.findall(pattern,line)
+        line_temp.append(txt)
+        
+    temp_length = []
+    for i in range(colume):
+        for j in range(len(line_temp)):
+            try:
+                temp_length.append(len(line_temp[j][i]))
+            except IndexError:
+                print('space row')
+        unit_record.append(max(temp_length))
+
+    msg = ''
+    for line in lines:
+        txt = re.findall(pattern,line)
+        for i in range(len(txt)):
+            with open(file_out, 'a') as file_obj:
+                space = ('%-' + str(unit_record[i]+space_number) + 's')
+                msg = space % txt[i]
+                file_obj.write(msg)
+                if i == len(txt)-1:
+                    file_obj.write('\n')
