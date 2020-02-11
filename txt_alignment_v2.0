@@ -1,0 +1,57 @@
+import re
+# I/O setting
+file_in = 'data_in.txt'
+file_out = 'data_out.txt'
+
+unit_record = []
+max_ch = []
+line_temp = []
+pattern = '\S+' # "Space" as seperation sign
+
+colume = int(input("How many columns in your data:"))
+space_number = int(input("The number of spaces between each column:"))
+
+def is_chinese(x): # chinese correction
+    if x >= u'\u4e00' and x <= u'\u9fa5':
+        return 1
+    else:
+        return 0
+
+with open(file_in, encoding='utf-8') as f_obj:
+    lines = f_obj.readlines()
+    
+    for line in lines:
+        txt = re.findall(pattern,line)
+        line_temp.append(txt)
+        
+    index_max = []
+    for i in range(colume):
+        temp_length = []
+        for j in range(len(line_temp)):
+            try:
+                temp_length.append(len(line_temp[j][i]))
+            except IndexError:
+                print('space row')
+                
+        index_max.append(temp_length.index(max(temp_length)))
+        ch_count = 0
+        msg = line_temp[temp_length.index(max(temp_length))][i]
+        for i in range(len(msg)):
+            ch_count += is_chinese(msg[i])
+        max_ch.append(ch_count)
+        unit_record.append(max(temp_length))
+        
+    msg = ''
+    for line in lines:
+        txt = re.findall(pattern,line)
+        for i in range(len(txt)):
+            with open(file_out, 'a') as file_obj:
+                msg = txt[i]
+                ch_count = 0
+                for j in range(len(msg)):
+                    ch_count += is_chinese(msg[j])
+                space = ('%-' + str(unit_record[i]+space_number+max_ch[i]-ch_count) + 's')
+                msg = space % txt[i]
+                file_obj.write(msg)
+                if i == len(txt)-1:
+                    file_obj.write('\n')
