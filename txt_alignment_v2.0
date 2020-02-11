@@ -36,8 +36,8 @@ with open(file_in, encoding='utf-8') as f_obj:
         index_max.append(temp_length.index(max(temp_length)))
         ch_count = 0
         msg = line_temp[temp_length.index(max(temp_length))][i]
-        for i in range(len(msg)):
-            ch_count += is_chinese(msg[i])
+        for k in range(len(msg)):
+            ch_count += is_chinese(msg[k])
         max_ch.append(ch_count)
         unit_record.append(max(temp_length))
         
